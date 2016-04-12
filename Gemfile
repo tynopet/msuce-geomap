@@ -46,5 +46,4 @@ group :development do
 end
 
 gem 'google_maps_service'
-gem 'bootstrap-sass'
-# gem 'puma'
+gem 'bootstrap-sass'  
