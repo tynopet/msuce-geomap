@@ -48,3 +48,7 @@ end
 
 gem 'google_maps_service'
 gem 'bootstrap-sass'  
+
+group :production do 
+  gem 'pg'
+end
