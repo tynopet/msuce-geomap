@@ -19,7 +19,7 @@ class Map
     google.maps.event.addListener @map, 'click', (latlng) =>
       # Если есть какие-то маркеры - стираем нахер их
       if @markers
-        disposeObjects @markers
+        @disposeObjects @markers
         @markers = []
       x = latlng.latLng.lng()
       # x - широта
@@ -37,6 +37,7 @@ class Map
       map: @map)
     #Добавим маркер в массив
     @markers.push marker
+    marker
 
 
   draw: =>
@@ -159,6 +160,7 @@ class Map
     # Реакция на найти маркер
     $('#findPoint').click =>
       if $('#lng').val() and $('#lat').val()
+        @disposeObjects @markers
         marker = @createMarker $('#lng').val(), $('#lat').val()
         @map.setCenter(marker.getPosition())
       else
