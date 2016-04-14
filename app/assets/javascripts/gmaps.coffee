@@ -37,31 +37,12 @@ class Map
       map: @map)
     #Добавим маркер в массив
     @markers.push marker
-    # @addEventListenerToMarker marker, x, y
 
-  # addEventListenerToMarker: (marker, x, y) =>
-  #   # Создаем окошко
-  #   google.maps.event.addListener marker, 'click', =>
-  #     $.ajax
-  #       type: 'POST'
-  #       url: '/gmaps'
-  #       data: 'x=' + x + '&y=' + y
-  #       success: (data) =>
-  #         contentString = '
-  #         <div>
-  #           Координаты:
-  #           <br>
-  #           Широта: ' + data[0].location.lat + '
-  #           <br>
-  #           Долгота: ' + data[0].location.lng + '
-  #           <br>
-  #           Высота: ' + data[0].elevation + ' м
-  #         </div>
-  #         '
-  #         infoWindow = new (google.maps.InfoWindow)(content: contentString)
-  #         infoWindow.open @map, marker
 
   draw: =>
+    unless @markers
+      alert 'Сначала поставьте точку!'
+      return
     unless $('#length').val() or $('#height').val()
       alert 'Заполните все поля!'
       return
@@ -104,6 +85,9 @@ class Map
   drawGrid: =>
     verticalLength = parseFloat($('#verticalLength').val())
     horizontalLength = parseFloat($('#horizontalLength').val())
+    unless @markers
+      alert 'Сначала поставьте точку!'
+      return
     unless verticalLength or horizontalLength
       alert 'Заполните все поля!'
       return
@@ -146,13 +130,18 @@ class Map
     return [y, x]
 
   sendData: =>
-    $.ajax
-      type: 'POST'
-      url: '/gmaps'
-      data: 'points=' + JSON.stringify(@points)
-      success: (data) ->
-        if data.success == 'yep'
-          window.location.href = '/gmaps/download'
+    if @points and @points.length != 0
+      $('#ajax').html('<img id="ajax-gif" src="ajax.gif" width="30px" height="30px">')
+      $.ajax
+        type: 'POST'
+        url: '/gmaps'
+        data: 'points=' + JSON.stringify(@points)
+        success: (data) ->
+          if data.success == 'yep'
+            $('#ajax-gif').remove()
+            window.location.href = '/gmaps/download'
+    else 
+      alert 'Вы не нарисовали сетку!'
 
 
   disposeObjects: (objects) ->
